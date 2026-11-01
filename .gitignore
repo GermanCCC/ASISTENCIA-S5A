@@ -1,0 +1,37 @@
+# Dependencias y build
+node_modules/
+dist/
+dev-dist/
+
+# Variables de entorno (llaves de Supabase)
+.env
+.env.*
+!.env.example
+
+# Datos reales de alumnos: no deben subirse al repositorio
+alumnos_S5A.csv
+
+# Supabase CLI (archivos locales)
+supabase/.branches/
+supabase/.temp/
+
+# Editor y sistema
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+release/
+.build-cache/
+.local-test-*/
+local-data/
+*.local-backup.json
+public/oracleJdk-27/
+**/database-secret.json
+**/salon-ca.key
+**/salon-ca.crt
+**/AsistenciaLocal/
+
+# Netlify CLI (datos del sitio vinculado)
+.netlify/

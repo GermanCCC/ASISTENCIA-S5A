@@ -1,0 +1,96 @@
+{
+  "name": "asistencia-s5a",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "desktop/main.mjs",
+  "description": "Asistencia por QR para Windows y teléfonos en la red local",
+  "author": "Asistencia S5A",
+  "scripts": {
+    "build:local": "vite build --mode escritorio",
+    "local": "npm run build:local && electron .",
+    "local:servidor": "node desktop/run.mjs",
+    "dist:windows": "npm run build:local && electron-builder --win nsis --x64",
+    "prueba:local": "node --test desktop/tests/*.test.mjs",
+    "exportar:supabase": "node desktop/export-cloud.mjs",
+    "dev": "vite",
+    "dev:movil": "vite --host --mode movil",
+    "build": "vite build",
+    "preview": "vite preview",
+    "iconos": "node scripts/generar-iconos.js",
+    "db:push": "supabase db push",
+    "db:push:seed": "supabase db push --include-seed",
+    "fn:deploy": "node scripts/revisar-llamadas.mjs && supabase functions deploy --use-api",
+    "deploy": "node scripts/revisar-llamadas.mjs && npm run build && npx -y netlify-cli@27.11.2 deploy --prod --no-build --dir dist",
+    "prueba:fase5": "node --env-file=.env scripts/prueba-fase5.mjs",
+    "prueba:fase6": "node --env-file=.env scripts/prueba-fase6.mjs",
+    "revisar:llamadas": "node scripts/revisar-llamadas.mjs",
+    "prueba:fase7": "node --env-file=.env scripts/prueba-fase7.mjs",
+    "prueba:fase8": "node scripts/prueba-fase8.mjs"
+  },
+  "dependencies": {
+    "@embedded-postgres/windows-x64": "17.10.0-beta.17",
+    "@supabase/supabase-js": "^2.117.3",
+    "exceljs": "^4.4.0",
+    "express": "5.3.0",
+    "jspdf": "^4.2.1",
+    "node-forge": "1.4.0",
+    "pg": "8.23.1",
+    "qr-scanner": "^1.4.2",
+    "qrcode": "^1.5.4",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-router": "^8.4.0",
+    "recharts": "^3.10.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "electron": "45.0.0",
+    "electron-builder": "26.15.3",
+    "playwright-core": "1.64.1",
+    "sharp": "^0.35.5",
+    "supabase": "^2.120.0",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.3.3",
+    "vite-plugin-pwa": "^2.0.0"
+  },
+  "build": {
+    "appId": "mx.asistencia.s5a.local",
+    "productName": "Asistencia Local",
+    "asar": false,
+    "compression": "normal",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "desktop/**/*.mjs",
+      "desktop/bootstrap.sql",
+      "!desktop/tests/**",
+      "dist/**",
+      "supabase/migrations/*.sql",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "public/pwa-512.png",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "useZip": true,
+      "differentialPackage": false,
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "Asistencia-Local-${version}-Windows.${ext}"
+    }
+  },
+  "overrides": {
+    "exceljs": {
+      "uuid": "^11.1.1"
+    }
+  }
+}

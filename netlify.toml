@@ -1,0 +1,37 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# La app es una SPA: todas las rutas (/escanear, /profesor, ...) las resuelve
+# React Router en el navegador. Sin esta regla, recargar o abrir un enlace
+# directo como /activar?codigo=... daría error 404 en Netlify.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Encabezados de seguridad para todas las páginas.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Nadie puede meter la app dentro de un <iframe> de otra página
+    # (evita que engañen al profesor para hacer clic en algo).
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Cámara y ubicación solo para esta app; micrófono para nadie.
+    Permissions-Policy = "camera=(self), geolocation=(self), microphone=()"
+
+# Los archivos de /assets llevan un hash en el nombre (index-Czlw4tHH.js):
+# si cambian, cambia el nombre. Por eso se pueden guardar en caché un año.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# El service worker NUNCA se guarda en caché: es el que avisa que hay una
+# versión nueva de la app. Si se quedara viejo, nadie recibiría cambios.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
