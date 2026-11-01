@@ -1,0 +1,43 @@
+@import 'tailwindcss';
+
+/*
+  Modo oscuro por clase: la clase `dark` en <html> la pone src/lib/tema.js
+  (siguiendo al sistema o a la elección del usuario). Así podemos tener un
+  botón para cambiar de tema, cosa que no se puede con solo `prefers-color-scheme`.
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+@layer base {
+  html {
+    /* Evita que el navegador del celular agrande el texto por su cuenta */
+    -webkit-text-size-adjust: 100%;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+    min-height: 100dvh;
+  }
+  /* Quita el resaltado azul al tocar botones en Android */
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Barra del QR rotativo (QrGrande): se llena de 0 a 100 % en lo que dura
+   cada QR. La duración y el punto de arranque los pone el componente. */
+@keyframes llenar-barra-qr {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
